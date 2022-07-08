@@ -1,0 +1,20 @@
+package com.capgemini.ccsw.tutorial.game;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import com.capgemini.ccsw.tutorial.game.model.Game;
+
+public interface GameRepository extends CrudRepository<Game, Long> {
+
+    // Como tenemos varias condiciones, la query se puede hacer complicada y por eso
+    // usamos la herramienta Query?
+    @Query("select g from Game g where (:title is null or g.title like '%'||:title||'%') and (:category is null or g.category.id = :category)")
+    List<Game> find(@Param("title") String title, @Param("category") Long category);
+
+    List<Game> findByTitle(String title);
+
+}
